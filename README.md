@@ -1,29 +1,37 @@
-# element
+# 二手车管理系统
 
-This template should help get you started developing with Vue 3 in Vite.
+## 技术栈
 
-## Recommended IDE Setup
+前端：
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- 主界面： `vue`  版本 : 3.3.4
+- 路由导航: `vue-router` 版本 : 4.2.4
+- 网络请求: `axios` 版本: 1.4.0
+- 组件: `Element-ui plus` 版本 : 2.3.7
 
-## Customize configuration
+后端:
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- `Sprint Boot` 版本 : 3.1.1
+- `MyBatis` 版本: 3.0.1
+- `Mysql` 版本 8.0.33
 
-## Project Setup
 
-```sh
-npm install
+
+## 测试环境
+
+- `archlinux` 
+- `npm` 9.8.0
+- `node` 16.20.1
+- `jdk` 8
+
+
+
+## 启动项目
+
+```bash
+git clone https://github.com/yuri2078/second_car.git
+cd second_car
+#后端
+java -jar 
 ```
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```

@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router"
+import { ElNotification } from "element-plus"
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -24,6 +25,7 @@ router.beforeEach((to, from, next) => {
     }
     if (to.fullPath == '/car/3' && (!root_user.includes(username))) {
         next('/car/0');
+        ElNotification.error("普通用户禁止进入管理界面!");
         return;
     }
     next();
