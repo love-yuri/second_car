@@ -1,0 +1,13 @@
+*.out
+*.class
+*.user
+.ccls-cache
+.idea/
+*.o
+cmake-build-debug/
+*build/
+build*/
+.cache/
+devel/
+
+node_modules/
