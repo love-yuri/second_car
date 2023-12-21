@@ -8,7 +8,7 @@
           @row-click="showCarInfo"
           filterable="true"
         >
-          <el-table-column prop="id" label="id" width="140" align="center" sortable="" />
+          <!-- <el-table-column prop="id" label="id" width="140" align="center" sortable="" /> -->
           <el-table-column
             prop="brand_name"
             label="品牌"

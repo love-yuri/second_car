@@ -1,10 +1,17 @@
 <template>
-  
   <div id="system" v-if="ready == true">
     <div id="left">
       <h1>花生</h1>
-      <button id="search">搜索</button>
+      <!-- <button id="search">搜索</button> -->
       <hr style="margin: 12px" />
+      <div class="!pl-3 !pr-3">
+        <el-input placeholder="AI搜索" v-model="search" class="h-15">
+          <template #append>
+            <el-button icon="Search" @click="searchCar" />
+          </template>
+        </el-input>
+      </div>
+
       <h2>内容</h2>
       <div
         v-for="(iteam, index) in lists"
@@ -23,79 +30,83 @@
     <el-container id="right">
       <el-header id="header-container">
         <span>当前用户 : {{ this.user.username }} </span>
-        <el-avatar icon=UserFilled />
+        <el-avatar icon="UserFilled" />
       </el-header>
 
       <el-main id="main-container">
-		<router-view :message="user" :carCompare="comCars" @addComCar="addComCar"></router-view>
-	</el-main>
+        <router-view :message="user" :carCompare="comCars" @addComCar="addComCar"></router-view>
+      </el-main>
     </el-container>
   </div>
 
-
-  <login v-else @is-login="readyToLogin"/>
+  <login v-else @is-login="readyToLogin" />
 </template>
-
 
 <script>
 import { ElMessage, ElNotification } from 'element-plus';
 import login from './components/login.vue';
+import { Search } from '@element-plus/icons-vue';
 
 export default {
-  components: { login},
-	props: ['message', 'carCompare'],
+  components: { login },
+  props: ['message', 'carCompare'],
   data() {
     return {
-      msg: "this is student page!",
+      msg: 'this is student page!',
       ready: false,
       selectedIndex: 0,
       user: {},
       comCars: [],
-      test:[],
+      search: '',
+      test: [],
       lists: [
         {
           icon: "background-image: url('src/assets/icons/标签.svg')",
-          name: "最新信息",
+          name: '最新信息'
         },
         {
           icon: "background-image: url('src/assets/icons/表情.svg')",
-          name: "我的收藏",
+          name: '我的收藏'
         },
         {
           icon: "background-image: url('src/assets/icons/积分.svg')",
-          name: "进入对比",
+          name: '进入对比'
         },
         {
           icon: "background-image: url('src/assets/icons/解锁.svg')",
-          name: "品牌管理",
+          name: '品牌管理'
         },
         {
           icon: "background-image: url('src/assets/icons/图片.svg')",
-          name: "用户信息",
+          name: '用户信息'
         },
         {
           icon: "background-image: url('src/assets/icons/云端.svg')",
-          name: "主题",
+          name: '主题'
         },
         {
           icon: "background-image: url('src/assets/icons/咨询.svg')",
-          name: "菜单",
+          name: '菜单'
         },
         {
           icon: "background-image: url('src/assets/icons/定位.svg')",
-          name: "插件",
-        },
-      ],
+          name: '插件'
+        }
+      ]
     };
   },
   methods: {
     callBack(index) {
       if (index > 4) {
-        ElNotification.error("界面未开发!");
+        ElNotification.error('界面未开发!');
         return;
       }
       this.selectedIndex = index;
-      this.$router.push("/car/" + index);
+      this.$router.push('/car/' + index);
+    },
+
+    searchCar() {
+      console.log(this.search);
     },
 
     readyToLogin(userInfo) {
@@ -110,28 +121,26 @@ export default {
 
     addComCar(row) {
       let flag = false;
-      this.comCars.forEach(element => {
+      this.comCars.forEach((element) => {
         if (element.id == row.id) {
-          ElMessage.error("已经添加过了捏!");
+          ElMessage.error('已经添加过了捏!');
           flag = true;
           return;
         }
       });
       if (flag == false) {
-        ElMessage.success("加入 " + row.id + " 成功!");
+        ElMessage.success('加入 ' + row.id + ' 成功!');
         this.comCars.push(row);
       }
     }
-  },
+  }
 };
 </script>
-
-
 
 <style scoped>
 * {
   margin: 0;
-  padding: 0 !important;
+  padding: 0;
   box-sizing: border-box;
 }
 #system {
@@ -166,7 +175,7 @@ export default {
 #search {
   width: 100% - 40px;
   height: 70px;
-  background-image: url("./assets/icons/搜索.svg");
+  background-image: url('./assets/icons/搜索.svg');
   background-repeat: no-repeat;
   background-position: 12px center;
   background-size: 35px;
@@ -241,7 +250,7 @@ export default {
   /* margin-top: 10px; */
 }
 
-#header-container > .el-avatar{
+#header-container > .el-avatar {
   width: 48px;
   height: 48px;
   margin: 12px;
@@ -250,9 +259,8 @@ export default {
 #main-container {
   background-color: aliceblue;
 }
-.el-main, .el-heder {
+.el-main,
+.el-heder {
   padding: 0 !important;
 }
-
-
 </style>
