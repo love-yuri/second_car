@@ -22,7 +22,6 @@
       <el-input placeholder="品牌名" v-model="brand_value_1" />
       <el-input placeholder="备注" v-model="remark" />
       <el-button
-        class="mt-4"
         style="width: 100%"
         type="primary"
         @click="addBrand"
@@ -61,7 +60,6 @@
     </el-select>
     <el-input placeholder="车型" v-model="module_name" />
     <el-button
-      class="mt-4"
       style="width: 100%"
       type="primary"
       @click="addModule"

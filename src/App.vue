@@ -4,13 +4,6 @@
       <h1>花生</h1>
       <!-- <button id="search">搜索</button> -->
       <hr style="margin: 12px" />
-      <div class="!pl-3 !pr-3">
-        <el-input placeholder="AI搜索" v-model="search" class="h-15">
-          <template #append>
-            <el-button icon="Search" @click="searchCar" />
-          </template>
-        </el-input>
-      </div>
 
       <h2>内容</h2>
       <div
@@ -82,7 +75,7 @@ export default {
         },
         {
           icon: "background-image: url('src/assets/icons/云端.svg')",
-          name: '主题'
+          name: '热门推荐'
         },
         {
           icon: "background-image: url('src/assets/icons/咨询.svg')",
@@ -97,8 +90,12 @@ export default {
   },
   methods: {
     callBack(index) {
-      if (index > 4) {
+      if (index > 5) {
         ElNotification.error('界面未开发!');
+        return;
+      }
+      if (index == 5 && this.user.id == -1) {
+        ElMessage.error('请先登录!');
         return;
       }
       this.selectedIndex = index;
@@ -138,11 +135,7 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
 #system {
   width: 100vw;
   height: 100vh;

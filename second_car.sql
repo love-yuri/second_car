@@ -174,5 +174,9 @@ where car_model.brand_id = car_brand.id
   and cars.model_id = car_model.id;
 
 
-
+create table history(
+    id int auto_increment primary key,
+    user_id int,
+    tag varchar(20)
+);
 
