@@ -61,6 +61,12 @@ create table if not exists storehouse
     foreign key (car_id) references cars (id) on delete cascade on update cascade
 );
 
+create table history(
+    id int auto_increment primary key,
+    user_id int,
+    tag varchar(20)
+);
+
 # 插入用户
 INSERT INTO users (username, password)
 VALUES ('john', 'john123'),
@@ -172,11 +178,3 @@ select cars.id, car_brand.name 'brand_name', car_model.name 'model_name',
 from cars, car_brand, car_model
 where car_model.brand_id = car_brand.id
   and cars.model_id = car_model.id;
-
-
-create table history(
-    id int auto_increment primary key,
-    user_id int,
-    tag varchar(20)
-);
-

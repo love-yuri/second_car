@@ -25,7 +25,6 @@
         <span>当前用户 : {{ this.user.username }} </span>
         <el-avatar icon="UserFilled" />
       </el-header>
-
       <el-main id="main-container">
         <router-view :message="user" :carCompare="comCars" @addComCar="addComCar"></router-view>
       </el-main>

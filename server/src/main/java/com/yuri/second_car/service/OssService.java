@@ -42,7 +42,13 @@ public class OssService {
         historyMapper.addHistory(history);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("接下来你将模拟一个搜索引擎.我会把数据和提问词发给你.请你返回符合我要求的数据.要求返回id就行,用.分开.别的话不用说.数据: ");
-        carService.getAllCarInfo().forEach(e -> stringBuilder.append("id: ").append(e.getId()).append(" 品牌名:").append(e.getBrand_name()).append(" 型号: ").append(e.getModel_name()).append(" "));
+        carService.getAllCarInfo().forEach(e ->
+                stringBuilder.append("id: ").
+                        append(e.getId()).append(" 品牌名:").append(e.getBrand_name()).
+                        append(" 型号: ").append(e.getModel_name())
+                        .append(" 里程: ").append(e.getMileage())
+                        .append(" 价格: ").append(e.getPrice())
+                        .append(" "));
 //        log.info(carService.getAllCarInfo().toString());
         stringBuilder.append(msg.getMsg());
         String res = spark(stringBuilder.toString()).getData();
@@ -52,7 +58,7 @@ public class OssService {
         for (CarInfo carInfo : carInfos) {
             boolean shouldKeep = false;
             for (String id : ret) {
-                if (carInfo.getId() == Integer.parseInt(id)) {
+                if (!id.isEmpty() && carInfo.getId() == Integer.parseInt(id)) {
                     shouldKeep = true;
                     break;
                 }
@@ -71,7 +77,13 @@ public class OssService {
         }
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("接下来你将模拟一个推荐引擎.我会把数据和搜索历史发给你.请你返回推荐给我的数据,不需要完全吻合历史记录,大致吻合就行.要求返回id就行,用.分开.别的话不用说.数据: ");
-        carService.getAllCarInfo().forEach(e -> stringBuilder.append("id: ").append(e.getId()).append(" 品牌名:").append(e.getBrand_name()).append(" 型号: ").append(e.getModel_name()).append(" "));
+        carService.getAllCarInfo().forEach(e ->
+                stringBuilder.append("id: ").
+                        append(e.getId()).append(" 品牌名:").append(e.getBrand_name()).
+                        append(" 型号: ").append(e.getModel_name())
+                        .append(" 里程: ").append(e.getMileage())
+                        .append(" 价格: ").append(e.getPrice())
+                        .append(" "));
         List<History> histories = historyMapper.allHistory(users.getId());
         stringBuilder.append("历史 : ");
         for (History history : histories) {
@@ -88,7 +100,7 @@ public class OssService {
         for (CarInfo carInfo : carInfos) {
             boolean shouldKeep = false;
             for (String id : ret) {
-                if (carInfo.getId() == Integer.parseInt(id)) {
+                if (!id.isEmpty() && carInfo.getId() == Integer.parseInt(id)) {
                     shouldKeep = true;
                     break;
                 }
