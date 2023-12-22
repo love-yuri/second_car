@@ -4,6 +4,11 @@ import cn.hutool.core.lang.UUID;
 import com.unfbx.sparkdesk.SparkDeskClient;
 import com.unfbx.sparkdesk.entity.*;
 import com.unfbx.sparkdesk.listener.ChatListener;
+import com.yuri.second_car.entity.CarInfo;
+import com.yuri.second_car.entity.History;
+import com.yuri.second_car.entity.Users;
+import com.yuri.second_car.mapper.HistoryMapper;
+import com.yuri.second_car.query.SearchQuery;
 import com.yuri.second_car.result.R;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +24,92 @@ import java.util.concurrent.CountDownLatch;
 public class OssService {
     @Autowired
     private CarService carService;
-    public R<String> test(String msg) {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private HistoryMapper historyMapper;
+
+    public R<List<CarInfo>> search(SearchQuery msg) {
+        Users users = userService.findUserByUsername(msg.getUsername());
+        if(users == null) {
+            return R.error(new ArrayList<>(), "用户不存在");
+        }
+        History history = new History();
+        history.setUser_id(users.getId());
+        history.setTag(msg.getMsg());
+        historyMapper.addHistory(history);
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("接下来你将模拟一个搜索引擎.我会把数据和提问词发给你.请你返回符合我要求的数据.要求返回完整数据就行.别的话不用说.数据: ");
+        stringBuilder.append("接下来你将模拟一个搜索引擎.我会把数据和提问词发给你.请你返回符合我要求的数据.要求返回id就行,用.分开.别的话不用说.数据: ");
         carService.getAllCarInfo().forEach(e -> stringBuilder.append("id: ").append(e.getId()).append(" 品牌名:").append(e.getBrand_name()).append(" 型号: ").append(e.getModel_name()).append(" "));
 //        log.info(carService.getAllCarInfo().toString());
-        stringBuilder.append(" 不要日本的车");
-        return R.success(spark(stringBuilder.toString()).getData());
+        stringBuilder.append(msg.getMsg());
+        String res = spark(stringBuilder.toString()).getData();
+        String[] ret = res.split("\\D+");
+        List<CarInfo> carInfos = carService.getAllCarInfo();
+        List<CarInfo> filteredCarInfos = new ArrayList<>();
+        for (CarInfo carInfo : carInfos) {
+            boolean shouldKeep = false;
+            for (String id : ret) {
+                if (carInfo.getId() == Integer.parseInt(id)) {
+                    shouldKeep = true;
+                    break;
+                }
+            }
+            if (shouldKeep) {
+                filteredCarInfos.add(carInfo);
+            }
+        }
+        return R.success(filteredCarInfos);
+    }
+
+    public R<List<CarInfo>> hot(SearchQuery msg) {
+        Users users = userService.findUserByUsername(msg.getUsername());
+        if(users == null) {
+            return R.error(new ArrayList<>(), "用户不存在");
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("接下来你将模拟一个推荐引擎.我会把数据和搜索历史发给你.请你返回推荐给我的数据,不需要完全吻合历史记录,大致吻合就行.要求返回id就行,用.分开.别的话不用说.数据: ");
+        carService.getAllCarInfo().forEach(e -> stringBuilder.append("id: ").append(e.getId()).append(" 品牌名:").append(e.getBrand_name()).append(" 型号: ").append(e.getModel_name()).append(" "));
+        List<History> histories = historyMapper.allHistory(users.getId());
+        stringBuilder.append("历史 : ");
+        for (History history : histories) {
+            stringBuilder.append(history.getTag()).append(" ");
+        }
+        if(histories.isEmpty()) {
+            stringBuilder.append("没有历史记录, 随机推荐性价比高的");
+        }
+        String res = spark(stringBuilder.toString()).getData();
+//        log.info("text -> {}", stringBuilder.toString());
+        String[] ret = res.split("\\D+");
+        List<CarInfo> carInfos = carService.getAllCarInfo();
+        List<CarInfo> filteredCarInfos = new ArrayList<>();
+        for (CarInfo carInfo : carInfos) {
+            boolean shouldKeep = false;
+            for (String id : ret) {
+                if (carInfo.getId() == Integer.parseInt(id)) {
+                    shouldKeep = true;
+                    break;
+                }
+            }
+            if (shouldKeep) {
+                filteredCarInfos.add(carInfo);
+            }
+        }
+        return R.success(filteredCarInfos);
+    }
+
+    public R<List<History>> historyList(SearchQuery msg) {
+        Users users = userService.findUserByUsername(msg.getUsername());
+        if(users == null) {
+            return R.error(new ArrayList<>(), "该用户不存在");
+        }
+        return R.success(historyMapper.allHistory(users.getId()));
+    }
+
+    public R<Boolean> delHistory(History history) {
+        return R.success(historyMapper.delHistory(history.getId()) == 1);
     }
     public R<String> spark(String msg) {
         SparkDeskClient sparkDeskClient = SparkDeskClient.builder()

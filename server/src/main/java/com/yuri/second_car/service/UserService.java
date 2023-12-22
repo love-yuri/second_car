@@ -39,4 +39,8 @@ public class UserService {
         }
         return userMapper.addUsers(users);
     }
+
+    public Users findUserByUsername(String username) {
+        return userMapper.queryByUserName(username);
+    }
 }
